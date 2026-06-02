@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <h4 class="fw-bold">Leave a Suggestion</h4>
+                <form method="POST">
+                    {% csrf_token %}
+                    <textarea name="message" class="form-control mb-3" rows="4" placeholder="How can we improve the marketplace?" required></textarea>
+                    <button type="submit" class="btn btn-dark w-100">Submit Suggestion</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <h4 class="fw-bold mb-3">Community Feedback</h4>
+        {% for s in suggestions %}
+        <div class="card shadow-sm mb-2 border-0 bg-white">
+            <div class="card-body">
+                <p class="mb-1">{{ s.message }}</p>
+                <small class="text-muted">— {{ s.user.username }} on {{ s.created_at|date:"M d, Y" }}</small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

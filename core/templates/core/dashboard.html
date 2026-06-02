@@ -1,0 +1,105 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+{% if role == 'seller' %}
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <h4 class="fw-bold mb-4">Create Digital Product</h4>
+        <div class="card-custom p-4 shadow-lg">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="text-muted-custom small mb-1">Product Name</label>
+                    <input type="text" name="name" class="form-control bg-dark text-light border-secondary" required>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted-custom small mb-1">Price (₹)</label>
+                    <input type="number" name="price" class="form-control bg-dark text-light border-secondary" step="0.01" required>
+                </div>
+                <div class="mb-4">
+                    <label class="text-muted-custom small mb-1">Inventory Limit</label>
+                    <input type="number" name="stock" class="form-control bg-dark text-light border-secondary" required>
+                </div>
+                <button type="submit" class="btn btn-brand w-100">Publish Product</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h4 class="fw-bold mb-4">Your Portfolio</h4>
+        <div class="row">
+            {% for p in products %}
+            <div class="col-md-6 mb-4">
+                <div class="card-custom p-4 h-100 shadow">
+                    <p class="text-brand small fw-bold mb-1" style="color: #84cc16;">Active Product</p>
+                    <h4 class="fw-bold">{{ p.name }}</h4>
+                    <p class="text-muted-custom small mb-4">₹{{ p.price }} | Stock: {{ p.stock }} units</p>
+                    <span class="badge badge-custom px-3 py-2">Seller ID: {{ p.seller.username }}</span>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-muted-custom">Your portfolio is currently empty. Add a product to get started!</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="mb-5">
+    <p class="text-muted-custom small mb-1">Digital Studio</p>
+    <h1 class="fw-bold display-4 mb-4">Elevate Your Arsenal<br>Through Premium Products</h1>
+</div>
+
+<div class="row">
+
+    <div class="col-md-4 mb-4">
+        <div class="card-custom p-0 h-100 shadow-lg overflow-hidden border border-success">
+            <div style="height: 200px; background: linear-gradient(45deg, #166534, #064e3b);" class="w-100 mb-3 d-flex align-items-center justify-content-center">
+                <h2 class="text-white fw-bold">🛒 MarketHub Pro</h2>
+            </div>
+
+            <div class="p-4 pt-2">
+                <p class="small fw-bold mb-1" style="color: #84cc16;">₹4999.00 <span class="text-muted-custom">/ ★ 5.0</span></p>
+                <h4 class="fw-bold mb-3">MarketHub Pro Source Code</h4>
+                <p class="text-muted-custom small mb-4">The ultimate multi-vendor e-commerce platform codebase. Developed exclusively by the MarketHub Team.</p>
+
+                <div class="d-flex mb-4">
+                    <span class="badge badge-custom px-3 py-2 me-2">Product</span>
+                    <span class="badge badge-custom px-3 py-2 me-2">Exclusive</span>
+                </div>
+
+                <button class="btn btn-brand w-100 fw-bold">Featured - Buy Now →</button>
+            </div>
+        </div>
+    </div>
+
+    {% for p in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card-custom p-0 h-100 shadow-lg overflow-hidden">
+            <div style="height: 200px; background: linear-gradient(45deg, #1e293b, #0f172a);" class="w-100 mb-3 d-flex align-items-center justify-content-center">
+                <span class="text-muted-custom fs-1">📦</span>
+            </div>
+
+            <div class="p-4 pt-2">
+                <p class="small fw-bold mb-1" style="color: #84cc16;">₹{{ p.price }} <span class="text-muted-custom">/ ★ 4.9</span></p>
+                <h4 class="fw-bold mb-3">{{ p.name }}</h4>
+                <p class="text-muted-custom small mb-4">Developed by {{ p.seller.username }}. Available stock: {{ p.stock }} licenses.</p>
+
+                <div class="d-flex mb-4">
+                    <span class="badge badge-custom px-3 py-2 me-2">Product</span>
+                    <span class="badge badge-custom px-3 py-2 me-2">Digital</span>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="add_to_cart" value="true">
+                    <input type="hidden" name="product_id" value="{{ p.id }}">
+                    <button type="submit" class="btn btn-outline-light w-100 border-secondary rounded-pill hover-brand">Add to Cart →</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
